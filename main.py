@@ -24,9 +24,8 @@ def authenticate_user(username, password):
                 user = User(row[0], row[1])
                 return user
 
-    
-if __name__ == "__main__":
-    print("Welcome, please enter your credentials")
+def login():
+    print("Please enter your credentials")
     username = input("Username: ")
     password = input("Password: ")
     user = None
@@ -39,6 +38,26 @@ if __name__ == "__main__":
         user = authenticate_user(username, password)
     
     clear_screen()
+    return user
+
+def signup():
+    pass
+    
+if __name__ == "__main__":
+    while True:
+        
+        print("\n\nWelcome, please select one of the options")
+        menuLogin = int(input("1. Create account 2. Log in"))
+        
+        if menuLogin == 1:
+            signup()
+            break
+        elif menuLogin == 2:
+            user = login()
+            break
+        else:
+            print("Please input valid option")
+    
     print("Login successful!")
     
     
