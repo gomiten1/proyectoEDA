@@ -19,12 +19,11 @@ def authenticate_user(username, password):
     with open('users.csv', 'r') as file:
         reader = csv.reader(file)
         next(reader) 
-        id = 1
         for row in reader:
             if row and row[0] == username and row[1] == password:
-                user = User(row[0], row[1], row[2], id)
+                user = User(row[0], row[1])
                 return user
-            id += 1
+
     
 if __name__ == "__main__":
     print("Welcome, please enter your credentials")
@@ -39,6 +38,7 @@ if __name__ == "__main__":
         password = input("Password: ")
         user = authenticate_user(username, password)
     
+    clear_screen()
     print("Login successful!")
     
     
