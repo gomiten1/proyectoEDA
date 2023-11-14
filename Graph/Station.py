@@ -2,6 +2,7 @@ class Station:
     to = 0
     cost = 0
     nxt = None
+    
     scooters = []
     name = ""
     location = ""

@@ -5,9 +5,9 @@ from Client import Client
 from User import User
 from os import system, name
 from Tree.BinaryTree import BinaryTree
-import Graph.Graph
+from Graph.Graph import Graph
 import Search.BinarySearch
-import Sort.MergeSort
+import Sort.RadixSort
 
 def clear_screen():
  
@@ -94,7 +94,7 @@ def search_elements():
 if __name__ == "__main__":
     tree_scooters = BinaryTree()
     tree_clients = BinaryTree()
-    map_stations = Graph()
+    map_stations = Graph(20, 10, 2, 2)
     
     
     
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         
         while True:
         
-            menuOption = int(input("1. Register elements 2. Administer trips 3. Search elements 4. Exit"))
+            menuOption = int(input("1. Register elements 2. Administer trips 3. Search elements 4. Delete elemnts 5. Exit"))
             
             if menuOption == 1: 
                 menuRegister = int(input("1. Cliente 2. Scooter 3. Station"))
@@ -131,7 +131,6 @@ if __name__ == "__main__":
                     card_data = input("Card data: ")
                     tree_clients.insert(Client(id, name, address, phone, mail, card_data))
                     
-                    
                     #Guardar en archivo
                     
                 elif menuRegister == 2:
@@ -139,11 +138,18 @@ if __name__ == "__main__":
                     id = int(input("ID of scooter: "))
                     key_station = input("Station where scooter is stored: ")
                     print("The scooter is being registered")
-                    tree_scooters.insert(Scooter(id))
-                    map_stations.find_
+                    new_scooter = Scooter(id)
+                    tree_scooters.insert(new_scooter)
+                    station_update = map_stations.find_station(key_station)
+                    
+                    station_update.scooters.append(new_scooter)
+                    Sort.RadixSort.radixSortID(station_update.scooters)
                     
                     
-                    #Para guardarlo en el archivo
+                    
+                    
+                    
+                    #Para guardarlo en el archivo (grafo y arbol) poner código
                     
                 elif menuRegister == 3:
                     pass
@@ -158,7 +164,26 @@ if __name__ == "__main__":
                 client = tree_clients.search(input(tree_clients.root, id_client))
                 administer_trips(map_stations, client, rented_scooter)
             elif menuOption == 3:
-                search_elements()
+                menuSearch = int(input("1. Scooter globally 2. Scooter locally (Within a station) 3. Client"))
+                if menuSearch == 1:
+                    id_scooter = int(input("ID of scooter: "))
+                    found_scooter = tree_scooters.search(tree_scooters.root, id_scooter)
+                    if found_scooter != None:
+                        print("Found scooter")
+                        print(found_scooter)
+                    else:
+                        print("Scooter not found")
+                        print("1. Try again 2. Exit")
+                        
+                        #terminar código acá xdxdxdd
+                
+                elif menuSearch == 2:
+                    key_station = input("Name of station to search: ")
+                    search_station = map_stations.find_station(key_station)
+                    
+                    
+                    
+                    
             elif menuOption == 4:
                 
                 break

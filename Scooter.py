@@ -5,3 +5,7 @@ class Scooter:
         self.destiny = destiny
         self.client = client
         
+    def __str__(self):
+        return "ID: " + str(self.id) + ", in use by: " + self.client.name
+         
+        
