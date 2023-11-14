@@ -4,7 +4,7 @@ class Station:
     nxt = None
     scooters = []
     name = ""
-    ubicacion = ""
+    location = ""
 
     #BFS
     prev = None

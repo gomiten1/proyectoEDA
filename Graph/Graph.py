@@ -112,6 +112,17 @@ class Graph:
                     string+="\n"
             i+=1
         print(string)
+        
+    def find_station(self, station_name):
+        for i in range(1, self.numNodes + 1):
+            station = self.edges[i]
+            while station:
+                if station.name == station_name:
+                    return station
+                station = station.nxt
+        return None
+    
+ 
     
 #Funciones que se van a usar para leer y escribir en un archivo
 
