@@ -90,18 +90,20 @@ class Graph:
             self.edges[u].color = 2
             
     def find_cost(self, intSource, intDestination):
-
+        if intSource not in range(1, self.numNodes + 1) or intDestination not in range(1, self.numNodes + 1):
+            print("Invalid station ID")
+            return None
         if self.edges[intSource] == None:
             self.edges[intSource] = Station()
         self.edges[intSource].color = 1
         self.edges[intSource].distance = 0
         self.edges[intSource].prev = None
-        acumulated_cost = 0
         
-        queue = []
+        
+        queue = [(intSource, 0)]
         queue.append(intSource)
         while len(queue) != 0:
-            u = queue.pop(0)
+            u, accumulated_cost = queue.pop(0)
             v = self.edges[u]
             while v != None:
                 if self.edges[v.to] != None:
@@ -109,12 +111,15 @@ class Graph:
                         self.edges[v.to].color = 1
                         self.edges[v.to].distance = self.edges[u].distance + 1
                         self.edges[v.to].prev = u
-                        queue.append(v.to)
+                        accumulated_cost += v.cost
+                        queue.append((v.to, accumulated_cost))
+                        
+                        if v.to == intDestination:
+                            return accumulated_cost
                 v = v.nxt
             self.edges[u].color = 2
 
  
-        
 
     def print_color(self):
         i = 1
