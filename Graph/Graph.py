@@ -89,7 +89,9 @@ class Graph:
                 v = v.nxt
             self.edges[u].color = 2
             
-    def find_cost(self, intSource, intDestination):
+    def find_cost(self, source, destination):
+        intSource = self.find_num_station(source)
+        intDestination = self.find_num_station(destination)
         if intSource not in range(1, self.numNodes + 1) or intDestination not in range(1, self.numNodes + 1):
             print("Invalid station ID")
             return None
@@ -150,6 +152,13 @@ class Graph:
             if station.name == station_name:
                 return station
         return None
+    
+    def find_num_station(self, station_name):
+        for i in range(1, self.numNodes + 1):
+            station = self.edges[i]
+            if station.name == station_name:
+                return i
+        return -1
     
     def delete_station(self, station_name):
         station_id = None

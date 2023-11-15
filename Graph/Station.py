@@ -7,6 +7,7 @@ class Station:
     scooters = []
     name = ""
     location = ""
+    numScooters = 0
 
     #BFS
     prev = None

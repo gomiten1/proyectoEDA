@@ -45,19 +45,22 @@ def login():
     return user
 
 def check_username_exists(username, filepath):
-    with open(filepath, mode='r',newline='') as usersReadFile:
-        reader = csv.reader(usersReadFile)
-        existing_usernames = [row[0] for row in reader]
-    return username in existing_usernames 
+    with open(filepath, 'r') as file:
+        reader = csv.reader(file)
+        next(reader) 
+        for row in reader:
+            if row and row[0] == username:
+                return False
+        return True
 
 def signup():
-    filepath = 'users copy.csv'
+    filepath = 'users.csv'
     while True: 
         newUsername = str(input('Enter your username: '))
     
         if check_username_exists(newUsername, filepath):
-            print('Username already exists.')
             break
+        print("Username already exits!")
 
     newPassword = str(input('Enter your password: '))
 
@@ -78,10 +81,30 @@ def administer_trips(stations, client, scooter):
             
             destination = stations.find_station(input("Where are you planning to go?"))
             scooter.destination = destination
+            print("Started trip from: " + scooter.origin.name + " to itended destination: " + scooter.destination.name)
+            scooter.cost = stations.find_cost(scooter.origin.name, scooter.destination.name)
+            print("Estimated cost of trip: " + scooter.cost)
             
             
             break
         elif menu == 2:
+            print("Scheduled to arrive to: " + scooter.destination.name)
+            if 2 == int(input("1. Confirm destination 2. Change destination: ")):
+                destination = stations.find_station(input("New destination: "))
+                print("Calculating new cost")
+                scooter.cost = stations.find_cost(scooter.origin.name, scooter.destination.name)
+                print("Trip by: " + scooter.client.name + " from " + scooter.origin.name 
+                      + " to " + scooter.destination.name + "cost: " + scooter.cost)
+                print("Your trip will be charged, thank you")
+            else:
+                print("Trip by: " + scooter.client.name + " from " + scooter.origin.name 
+                      + " to " + scooter.destination.name + "cost: " + scooter.cost)
+                print("Your trip will be charged, thank you")
+            
+            scooter.origin = scooter.destination
+            scooter.destination = None
+            scooter.client = None  
+            scooter.cost = 0  
             break
         else:
             print("Invalid option")
@@ -143,19 +166,23 @@ if __name__ == "__main__":
         
         while True:
         
-            menuOption = int(input("1. Register elements 2. Administer trips 3. Search elements 4. Delete elemnts 5. Exit"))
+            menuOption = int(input("1. Register elements 2. Administer trips 3. Search elements 4. Delete elements 5. Exit"))
             
             if menuOption == 1: 
                 menuRegister = int(input("1. Cliente 2. Scooter 3. Station"))
                 if menuRegister == 1:
                     
+                    
+                    #Se debe validar que el id sea único (mayor al ultimo id)
+                                        
                     id = int(input("ID of client: "))
                     name = input("Name: ")
                     address = input("Address: ")
                     phone = input("# Phone: ")
                     mail = input("Mail: ")
                     card_data = input("Card data: ")
-                    tree_clients.insert(Client(id, name, address, phone, mail, card_data))
+                    insert = Client(id, name, address, phone, mail, card_data)
+                    tree_clients.insert(Data(insert.id, insert))
                     
                     try:
                         file = open("client.csv", "a", encoding='utf-8')
@@ -170,11 +197,13 @@ if __name__ == "__main__":
                     
                 elif menuRegister == 2:
                     
+                    #igual con id acá xd
                     id = int(input("ID of scooter: "))
                     key_station = input("Station where scooter is stored: ")
                     print("The scooter is being registered")
                     new_scooter = Scooter(id)
-                    tree_scooters.insert(new_scooter)
+
+                    tree_scooters.insert(Data(new_scooter.id,new_scooter))
                     station_update = map_stations.find_station(key_station)
                     
                     station_update.scooters.append(new_scooter)
