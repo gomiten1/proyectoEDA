@@ -66,8 +66,7 @@ class Graph:
         print(string)
 
     def breadth_first_search(self, intSource):
-        vertex_time_plt = 0
-        edges_time_plt = 0
+     
 
         if self.edges[intSource] == None:
             self.edges[intSource] = Station()
@@ -86,11 +85,35 @@ class Graph:
                         self.edges[v.to].distance = self.edges[u].distance + 1
                         self.edges[v.to].prev = u
                         queue.append(v.to)
-                    edges_time_plt+=1
+
                 v = v.nxt
             self.edges[u].color = 2
-            vertex_time_plt +=1
-        return vertex_time_plt,edges_time_plt
+            
+    def find_cost(self, intSource, intDestination):
+
+        if self.edges[intSource] == None:
+            self.edges[intSource] = Station()
+        self.edges[intSource].color = 1
+        self.edges[intSource].distance = 0
+        self.edges[intSource].prev = None
+        acumulated_cost = 0
+        
+        queue = []
+        queue.append(intSource)
+        while len(queue) != 0:
+            u = queue.pop(0)
+            v = self.edges[u]
+            while v != None:
+                if self.edges[v.to] != None:
+                    if self.edges[v.to].color == 0:
+                        self.edges[v.to].color = 1
+                        self.edges[v.to].distance = self.edges[u].distance + 1
+                        self.edges[v.to].prev = u
+                        queue.append(v.to)
+                v = v.nxt
+            self.edges[u].color = 2
+
+ 
         
 
     def print_color(self):
@@ -123,6 +146,41 @@ class Graph:
                 return station
             station = station.nxt
         return None
+    
+    def delete_station(self, station_name):
+        station_id = None
+
+        for i in range(1, self.numNodes + 1):
+            station = self.edges[i]
+            prev_station = None
+            while station:
+                if station.name == station_name:
+                    station_id = i
+                    break
+                prev_station = station
+                station = station.nxt
+            if station_id is not None:
+                break
+
+        if station_id is None:
+            return
+
+        for i in range(1, self.numNodes + 1):
+            current_station = self.edges[i]
+            prev_station = None
+            while current_station:
+                if current_station.to == station_id:
+                    if prev_station:
+                        prev_station.nxt = current_station.nxt
+                    else:
+                        self.edges[i] = current_station.nxt
+                    break
+                prev_station = current_station
+                current_station = current_station.nxt
+
+        self.edges[station_id] = None
+
+        self.grade[station_id] = 0
     
  
     

@@ -6,7 +6,7 @@ from User import User
 from os import system, name
 from Tree.BinaryTree import BinaryTree
 from Graph.Graph import Graph
-import Search.BinarySearch
+from Search.BinarySearch import binary_search
 import Sort.RadixSort
 
 def clear_screen():
@@ -74,9 +74,9 @@ def administer_trips(stations, client, scooter):
     
         if menu == 1:
             scooter.client = client
-            origin = input("In what station are you renting your scooter? ")
-            #falta terminar
             
+            destination = map_stations.find_station(input("Where are you planning to go?"))
+            scooter.destination = destination
             
             break
         elif menu == 2:
@@ -180,11 +180,22 @@ if __name__ == "__main__":
                 elif menuSearch == 2:
                     key_station = input("Name of station to search: ")
                     search_station = map_stations.find_station(key_station)
+                    id_scooter = int(input("ID of scooter: "))
+                    found_scooter = binary_search(search_station.scooters, id_scooter)
+                    if found_scooter != None:
+                        print("Found scooter")
+                        print(found_scooter)
+                    else:
+                        print("Scooter not found")
+                        print("1. Try again 2. Exit")
+                        
+                        #terminar código acá xdxdxdd
                     
                     
                     
                     
             elif menuOption == 4:
+                menuDelete = int(input("1. Scooter 2. Client 3. Station"))
                 
                 break
         

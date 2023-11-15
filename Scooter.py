@@ -1,8 +1,8 @@
 class Scooter:
-    def __init__(self, id, origin = None, destiny = None, client = None):
+    def __init__(self, id, origin = None, destination = None, client = None):
         self.id = id
         self.origin = origin
-        self.destiny = destiny
+        self.destination = destination
         self.client = client
         
     def __str__(self):
