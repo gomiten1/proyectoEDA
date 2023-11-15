@@ -4,7 +4,8 @@ from Scooter import Scooter
 from Client import Client
 from User import User
 from os import system, name
-from Tree.BinaryTree import BinaryTree
+from Tree.Tree import BTree
+from Tree.TreeNode import Data
 from Graph.Graph import Graph
 from Search.BinarySearch import binary_search
 import Sort.RadixSort
@@ -75,8 +76,9 @@ def administer_trips(stations, client, scooter):
         if menu == 1:
             scooter.client = client
             
-            destination = map_stations.find_station(input("Where are you planning to go?"))
+            destination = stations.find_station(input("Where are you planning to go?"))
             scooter.destination = destination
+            
             
             break
         elif menu == 2:
@@ -85,15 +87,33 @@ def administer_trips(stations, client, scooter):
             print("Invalid option")
     
 
-def search_elements():
-    pass
 
+
+
+def fill_tree_clients(tree):
+    with open('client.csv', 'r') as file:
+        reader = csv.reader(file)
+        next(reader) 
+        id = 1
+        for row in reader:
+            obj = Client(int(row[0]), row[1], row[2], row[3], row[4], row[5])
+            tree.insert(Data(obj.id, obj))
+def fill_tree_scooters(tree):
+    with open('scooters.csv', 'r') as file:
+        reader = csv.reader(file)
+        next(reader) 
+        id = 1
+        for row in reader:
+            obj = Scooter(int(row[0]))
+            tree.insert(Data(obj.id, obj))
 
     
     
 if __name__ == "__main__":
-    tree_scooters = BinaryTree()
-    tree_clients = BinaryTree()
+    tree_scooters = BTree(2)
+    fill_tree_scooters(tree_scooters)
+    tree_clients = BTree(2)
+    fill_tree_clients(tree_clients)
     map_stations = Graph(20, 10, 2, 2)
     
     
@@ -102,7 +122,7 @@ if __name__ == "__main__":
         while True:
             
             print("\n\nWelcome, please select one of the options")
-            menuLogin = int(input("1. Create account 2. Log in"))
+            menuLogin = int(input("1. Create account 2. Log in 3. Exit: "))
             
             if menuLogin == 1:
                 user = signup()
@@ -110,8 +130,14 @@ if __name__ == "__main__":
             elif menuLogin == 2:
                 user = login()
                 break
+            elif menuLogin == 3:
+                break
             else:
                 print("Please input valid option")
+                
+        if menuLogin == 3:
+            break
+    
         
         print("Login successful!")
         
@@ -126,12 +152,21 @@ if __name__ == "__main__":
                     id = int(input("ID of client: "))
                     name = input("Name: ")
                     address = input("Address: ")
-                    phone = int(input("# Phone: "))
+                    phone = input("# Phone: ")
                     mail = input("Mail: ")
                     card_data = input("Card data: ")
                     tree_clients.insert(Client(id, name, address, phone, mail, card_data))
                     
-                    #Guardar en archivo
+                    try:
+                        file = open("client.csv", "a", encoding='utf-8')
+                        file.write(str(id)+","+name+","+address+","+phone+","+mail+","+card_data+"\n")
+                        print("Client created successfully")
+                    except:
+                        print("Error: file not found")
+                    finally:
+                        if file:
+                            file.close()
+               
                     
                 elif menuRegister == 2:
                     
@@ -145,11 +180,19 @@ if __name__ == "__main__":
                     station_update.scooters.append(new_scooter)
                     Sort.RadixSort.radixSortID(station_update.scooters)
                     
+                    try:
+                        file = open("scooters.csv", "a", encoding='utf-8')
+                        file.write(str(id)+"\n")
+                        print("Registered globally successfully")
+                    except:
+                        print("Error: file not found")
+                    finally:
+                        if file:
+                            file.close()
                     
                     
                     
-                    
-                    #Para guardarlo en el archivo (grafo y arbol) poner código
+                    #Para guardarlo en el archivo (grafo) poner código
                     
                 elif menuRegister == 3:
                     pass
@@ -159,7 +202,7 @@ if __name__ == "__main__":
                     print("Please, choose a valid option")
             elif menuOption == 2:
                 id_scooter = int(input("Enter ID of scooter: "))
-                rented_scooter = tree_scooters.search(tree_scooters.root, id_scooter)
+                rented_scooter = tree_scooters.search(id_scooter)
                 id_client = int(input("Enter ID of client: "))
                 client = tree_clients.search(input(tree_clients.root, id_client))
                 administer_trips(map_stations, client, rented_scooter)
@@ -167,7 +210,7 @@ if __name__ == "__main__":
                 menuSearch = int(input("1. Scooter globally 2. Scooter locally (Within a station) 3. Client"))
                 if menuSearch == 1:
                     id_scooter = int(input("ID of scooter: "))
-                    found_scooter = tree_scooters.search(tree_scooters.root, id_scooter)
+                    found_scooter = tree_scooters.search(id_scooter)
                     if found_scooter != None:
                         print("Found scooter")
                         print(found_scooter)
@@ -190,14 +233,27 @@ if __name__ == "__main__":
                         print("1. Try again 2. Exit")
                         
                         #terminar código acá xdxdxdd
+                        
+                elif menuSearch == 3:
+                    id_client = int(input("ID of client: "))
+                    found_client = tree_clients.search(id_client)
+                    if found_client != None:
+                        print("Found client")
+                        print(found_client)
+                    else:
+                        print("Client not found")
+                        print("1. Try again 2. Exit")
+                    
                     
                     
                     
                     
             elif menuOption == 4:
                 menuDelete = int(input("1. Scooter 2. Client 3. Station"))
-                
+            elif menuOption == 5:    
                 break
+            else:
+                print("Invalid option, please try again")
         
-    
+        
     

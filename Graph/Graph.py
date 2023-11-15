@@ -149,7 +149,6 @@ class Graph:
             station = self.edges[i]
             if station.name == station_name:
                 return station
-            station = station.nxt
         return None
     
     def delete_station(self, station_name):

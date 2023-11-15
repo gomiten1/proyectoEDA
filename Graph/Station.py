@@ -3,6 +3,7 @@ class Station:
     cost = 0
     nxt = None
     
+    #lo que nosotros agregamos realmente, el resto se queda igual
     scooters = []
     name = ""
     location = ""
