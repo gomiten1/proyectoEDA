@@ -299,17 +299,18 @@ if __name__ == "__main__":
                                 break
      
                     
-                '''elif menuOption == 4:
+            elif menuOption == 4:
                 menuDelete = int(input("1. Scooter 2. Client"))
                 if menuDelete == 1:
-                    delete = int(input("Id: "))
+                    delete = input("Id: ")
                     index = 0
                     with open('scooters.csv', 'r') as file:
                         rows = list(csv.reader(file))
                         
                     
-                    while delete != rows[index][0]:
+                    while delete != rows[index][0] and index <= num_scooters:
                         index += 1
+                        print("dasdad", rows[index][0])
 
                     del rows[index]
 
@@ -323,13 +324,13 @@ if __name__ == "__main__":
                     map_stations = Graph(20, 30, 2, 1)
                     map_stations.read_edges_from_csv("graph.csv")
                 elif menuDelete == 2:
-                    delete = int(input("Id: "))
+                    delete = input("Id: ")
                     index = 0
                     with open('client.csv', 'r') as file:
                         rows = list(csv.reader(file))
                         
                     
-                    while delete != rows[index][0]:
+                    while delete != rows[index][0] and index <= num_clients:
                         index += 1
 
                     del rows[index]
@@ -339,7 +340,7 @@ if __name__ == "__main__":
                         writer = csv.writer(file)
                         writer.writerows(rows)
                     tree_clients = BTree(2)
-                    num_clients = fill_tree_clients(tree_clients)'''    
+                    num_clients = fill_tree_clients(tree_clients)  
 
                     
             elif menuOption == 5:    
