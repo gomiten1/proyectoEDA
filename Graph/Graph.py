@@ -1,6 +1,7 @@
 import csv
 from Graph.Station import Station
-
+nombres = ["", "Pepe", "mario", "Nombre"]
+ubicaciones = ["", "jdkajd", "okad", "kokad"]
 class Graph:
     edges = []
     grade = []
@@ -17,14 +18,16 @@ class Graph:
             self.edges.append(None)
             i+=1
     
-    def insert_edge(self, intU, intV, intCost, isDirected, name="", scooters = [], location = ""):
+    def insert_edge(self, intU, intV, intCost, isDirected, scooters = []):
+        global nombres, ubicaciones
         item = Station()
-        item.name = name
+        item.name = nombres[intU]
         item.scooters = scooters
-        item.location = location
+        item.location = ubicaciones[intU]
         item.cost = intCost
         item.to = intV
         item.nxt = self.edges[intU]
+        
 
         self.edges[intU] = item
         self.grade[intU]+=1
@@ -34,6 +37,7 @@ class Graph:
 
 
     def read_edges(self):
+        
         i = 1
         while i <= self.numEdges:
             u = int(input('u: '))
