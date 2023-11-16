@@ -77,24 +77,29 @@ def administer_trips(stations, client, scooter):
         menu = int(input("1. Start a trip 2. End a trip"))
     
         if menu == 1:
-            scooter.client = client
+            scooter.client = client.id
+            origin = stations.get_station(scooter.origin)
+            name_destination = input("Where are you planning to go?")
+            destination = stations.find_station(name_destination)
             
-            destination = stations.find_station(input("Where are you planning to go?"))
-            scooter.destination = destination
-            print("Started trip from: " + scooter.origin.name + " to itended destination: " + scooter.destination.name)
-            scooter.cost = stations.find_cost(scooter.origin.name, scooter.destination.name)
+            scooter.destination = stations.find_num_station(name_destination)
+            print("Started trip from: " + origin.name + " to itended destination: " + destination.name)
+            scooter.cost = stations.find_cost(origin.name, destination.name)
             print("Estimated cost of trip: " + scooter.cost)
             
             
             break
         elif menu == 2:
-            print("Scheduled to arrive to: " + scooter.destination.name)
+            destination = stations.get_station(scooter.destination)
+            print("Scheduled to arrive to: " + destination.name)
             if 2 == int(input("1. Confirm destination 2. Change destination: ")):
-                destination = stations.find_station(input("New destination: "))
+                key_destination = input("New destination: ")
+                destination = stations.find_station(key_destination)
+                origin = stations.get_station(scooter.origin)
                 print("Calculating new cost")
-                scooter.cost = stations.find_cost(scooter.origin.name, scooter.destination.name)
-                print("Trip by: " + scooter.client.name + " from " + scooter.origin.name 
-                      + " to " + scooter.destination.name + "cost: " + scooter.cost)
+                scooter.cost = stations.find_cost(origin.name, destination.name)
+                print("Trip by: " + scooter.client.name + " from " + origin.name 
+                      + " to " + destination.name + "cost: " + scooter.cost)
                 print("Your trip will be charged, thank you")
             else:
                 print("Trip by: " + scooter.client.name + " from " + scooter.origin.name 
@@ -141,7 +146,8 @@ if __name__ == "__main__":
     num_scooters = fill_tree_scooters(tree_scooters)
     tree_clients = BTree(2)
     num_clients = fill_tree_clients(tree_clients)
-    map_stations = Graph(20, 10, 2, 2)
+    map_stations = Graph(20, 30, 2, 1)
+    map_stations.read_edges_from_csv("graph.csv")
     
     
     
@@ -212,13 +218,14 @@ if __name__ == "__main__":
 
                     tree_scooters.insert(Data(new_scooter.id,new_scooter))
                     station_update = map_stations.find_station(key_station)
+                    station_key = map_stations.find_num_station(key_station)
                     
                     station_update.scooters.append(new_scooter)
                     Sort.RadixSort.radixSortID(station_update.scooters)
                     
                     try:
                         file = open("scooters.csv", "a", encoding='utf-8')
-                        file.write(str(id)+"\n")
+                        file.write(str(id)+","+str(station_key)+",,,"+"\n")
                         print("Registered globally successfully")
                     except:
                         print("Error: file not found")
@@ -238,7 +245,7 @@ if __name__ == "__main__":
                 id_scooter = int(input("Enter ID of scooter: "))
                 rented_scooter = tree_scooters.search(id_scooter)
                 id_client = int(input("Enter ID of client: "))
-                client = tree_clients.search(input(tree_clients.root, id_client))
+                client = tree_clients.search(id_client)
                 administer_trips(map_stations, client, rented_scooter)
             
             
