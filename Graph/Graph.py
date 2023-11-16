@@ -115,9 +115,10 @@ class Graph:
         
         
         queue = [(intSource, 0)]
-        queue.append(intSource)
+        
         while len(queue) != 0:
-            u, accumulated_cost = queue.pop(0)
+            element = queue.pop(0)
+            u, accumulated_cost = element
             v = self.edges[u]
             while v != None:
                 if self.edges[v.to] != None:
@@ -127,6 +128,7 @@ class Graph:
                         self.edges[v.to].prev = u
                         accumulated_cost += v.cost
                         queue.append((v.to, accumulated_cost))
+                        print("Avanzando", v.to)
                         
                         if v.to == intDestination:
                             return accumulated_cost

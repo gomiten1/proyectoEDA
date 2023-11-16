@@ -20,7 +20,7 @@ def clear_screen():
         
        
 def authenticate_user(username, password):
-    with open('users copy.csv', 'r') as file:
+    with open('users.csv', 'r') as file:
         reader = csv.reader(file)
         next(reader) 
         for row in reader:
@@ -77,7 +77,7 @@ def administer_trips(stations, client, scooter):
         menu = int(input("1. Start a trip 2. End a trip"))
     
         if menu == 1:
-            scooter.client = client.id
+            scooter.client = client
             origin = stations.get_station(scooter.origin)
             name_destination = input("Where are you planning to go?")
             destination = stations.find_station(name_destination)
@@ -98,12 +98,13 @@ def administer_trips(stations, client, scooter):
                 origin = stations.get_station(scooter.origin)
                 print("Calculating new cost")
                 scooter.cost = stations.find_cost(origin.name, destination.name)
-                print("Trip by: " + scooter.client.name + " from " + origin.name 
+                print("Trip by: " + " from " + origin.name 
                       + " to " + destination.name + "cost: " + scooter.cost)
                 print("Your trip will be charged, thank you")
             else:
-                print("Trip by: " + scooter.client.name + " from " + scooter.origin.name 
-                      + " to " + scooter.destination.name + "cost: " + scooter.cost)
+                origin = stations.get_station(scooter.origin)
+                print("Trip by: "  + " from " + origin.name 
+                      + " to " + destination.name + "cost: " + scooter.cost)
                 print("Your trip will be charged, thank you")
             
             scooter.origin = scooter.destination
@@ -134,7 +135,7 @@ def fill_tree_scooters(tree):
         next(reader) 
         id = 0
         for row in reader:
-            obj = Scooter(int(row[0]))
+            obj = Scooter(int(row[0]),origin= int(row[1]))
             tree.insert(Data(obj.id, obj))
             id += 1
     return id
@@ -296,13 +297,51 @@ if __name__ == "__main__":
                             print("Client not found")
                             if 2 == int(input("1. Try again 2. Exit")):
                                 break
+     
                     
-                    
-                    
-                    
-                    
-            elif menuOption == 4:
+                '''elif menuOption == 4:
                 menuDelete = int(input("1. Scooter 2. Client"))
+                if menuDelete == 1:
+                    delete = int(input("Id: "))
+                    index = 0
+                    with open('scooters.csv', 'r') as file:
+                        rows = list(csv.reader(file))
+                        
+                    
+                    while delete != rows[index][0]:
+                        index += 1
+
+                    del rows[index]
+
+                    
+                    with open('scooters.csv', 'w', newline='') as file:
+                        writer = csv.writer(file)
+                        writer.writerows(rows)
+                        
+                    tree_scooters = BTree(2)
+                    num_scooters = fill_tree_scooters(tree_scooters)
+                    map_stations = Graph(20, 30, 2, 1)
+                    map_stations.read_edges_from_csv("graph.csv")
+                elif menuDelete == 2:
+                    delete = int(input("Id: "))
+                    index = 0
+                    with open('client.csv', 'r') as file:
+                        rows = list(csv.reader(file))
+                        
+                    
+                    while delete != rows[index][0]:
+                        index += 1
+
+                    del rows[index]
+
+                    
+                    with open('client.csv', 'w', newline='') as file:
+                        writer = csv.writer(file)
+                        writer.writerows(rows)
+                    tree_clients = BTree(2)
+                    num_clients = fill_tree_clients(tree_clients)'''    
+
+                    
             elif menuOption == 5:    
                 break
             else:
